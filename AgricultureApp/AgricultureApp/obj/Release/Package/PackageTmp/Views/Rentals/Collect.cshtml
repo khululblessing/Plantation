@@ -1,0 +1,316 @@
+﻿@{
+	ViewBag.Title = "Collect";
+}
+
+
+<style>
+
+	#sig-canvas {
+		border: 2px dotted #CCCCCC;
+		border-radius: 15px;
+		cursor: crosshair;
+	}
+
+	.clearfix {
+		clear: both;
+	}
+
+	.body {
+		padding: 10px;
+		font-size: 16px;
+	}
+
+	#dialog, #change-sig {
+		display: none;
+	}
+
+	i {
+		padding: 1px;
+		background-color: #f1f9ac;
+		bordeR: 1px solid #c3c17d;
+	}
+
+	#myCanvasSignature {
+		width: 100%;
+	}
+
+	.signature-pad {
+		border: 1px solid #ccc;
+	}
+
+	.signature-card {
+		padding: 10px;
+		width: 80%;
+		max-width: 1240px;
+		margin: auto;
+		border: 1px solid #ccc;
+	}
+
+
+	.sign-area {
+		padding: 10px;
+		margin-left: 0px;
+		width: 100%;
+		display: block;
+		position: relative;
+	}
+
+	.sign-block {
+		display: block;
+		position: relative;
+	}
+
+	.sign-area div {
+		display: inline-block;
+	}
+
+	.dig-sig {
+		display: inline-block;
+		border-bottom: 1px solid #222;
+		margin-left: 0px;
+	}
+
+	[role="dialog"] {
+		max-width: 100%;
+	}
+
+	.log-file {
+		display: none;
+	}
+</style>
+
+
+
+
+
+<!-- Add this script section -->
+<script>
+    // Function to check if the rental is confirmed
+    function checkConfirmation() {
+        var rentalId = @ViewBag.Id; // Get the rental ID from ViewBag
+        $.ajax({
+            url: '@Url.Action("CheckConfirmation", "Rentals")', // Replace with your action URL
+            type: 'GET',
+            data: { id: rentalId },
+            success: function (data) {
+                if (data.isConfirmed) {
+                    // Do something when the rental is confirmed
+                    alert('The user has confirmed!');
+                    clearInterval(confirmationCheckInterval); // Stop the interval
+                }
+            },
+            error: function () {
+                // Handle error
+            }
+        });
+    }
+
+    // Check confirmation every 10 seconds
+    var confirmationCheckInterval = setInterval(function () {
+        if (@ViewBag.IsConfirmed) {
+            clearInterval(confirmationCheckInterval); // Stop the interval if IsConfirmed is true
+        } else {
+            checkConfirmation();
+        }
+    }, 10000);
+</script>
+
+
+@if (ViewBag.IsConfirmed == true)
+{
+	<div>
+		<p class="label-warning" style="padding:5px; color:green; text-align:center">The user has been confirmed</p>
+		<hr />
+		<div>
+			<div class="signature">
+				<h1>Give to the customer to sign</h1>
+				<p>Hello @ViewBag.Name,</p>
+				<p>Thank you for your support. Please visit our site again.</p>
+
+				<p>To confirm your collection, please sign below:</p>
+
+				<div class="sign-area">
+					<div class="sign-block pull-right">
+						<div class="signature">
+							<div class="row">
+								<div class="col-md-12">
+									<canvas id="sig-canvas" width="620" height="160">
+										Get a better browser, bro.
+									</canvas>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<button class="btn btn-primary" id="sig-submitBtn">Submit Signature</button>
+									<button class="btn btn-default" id="sig-clearBtn">Clear Signature</button>
+								</div>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-md-12">
+									Signature :<img style="border-bottom:1px solid black; width:200px; height:100px" id="sig-image" src="" />
+								</div>
+							</div>
+
+							<hr />
+							<div class="row">
+								<form method="post" action="@Url.Action("Collect","Rentals")" class="col-md-12">
+									<textarea style="display:none" id="sig-dataUrl" name="signature" class="form-control" rows="5">Data URL for your signature will go here!</textarea>
+									<input type="hidden" value="@ViewBag.Id" name="id" />
+									<input type="submit" value="Complete Collection" class="btn btn-success" />
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+else
+{
+	<h2 class="label-warning" style="padding:5px; color:green; text-align:center">A confirmation email has been sent to the owner of this rental, Please wait for the customer to confirm their email</h2>
+}
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+
+<script>
+	(function () {
+		window.requestAnimFrame = (function (callback) {
+			return window.requestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.mozRequestAnimationFrame ||
+				window.oRequestAnimationFrame ||
+				window.msRequestAnimaitonFrame ||
+				function (callback) {
+					window.setTimeout(callback, 1000 / 60);
+				};
+		})();
+
+		var canvas = document.getElementById("sig-canvas");
+		var ctx = canvas.getContext("2d");
+		ctx.strokeStyle = "#222222";
+		ctx.lineWidth = 4;
+
+		var drawing = false;
+		var mousePos = {
+			x: 0,
+			y: 0
+		};
+		var lastPos = mousePos;
+
+		canvas.addEventListener("mousedown", function (e) {
+			drawing = true;
+			lastPos = getMousePos(canvas, e);
+		}, false);
+
+		canvas.addEventListener("mouseup", function (e) {
+			drawing = false;
+		}, false);
+
+		canvas.addEventListener("mousemove", function (e) {
+			mousePos = getMousePos(canvas, e);
+		}, false);
+
+		// Add touch event support for mobile
+		canvas.addEventListener("touchstart", function (e) {
+
+		}, false);
+
+		canvas.addEventListener("touchmove", function (e) {
+			var touch = e.touches[0];
+			var me = new MouseEvent("mousemove", {
+				clientX: touch.clientX,
+				clientY: touch.clientY
+			});
+			canvas.dispatchEvent(me);
+		}, false);
+
+		canvas.addEventListener("touchstart", function (e) {
+			mousePos = getTouchPos(canvas, e);
+			var touch = e.touches[0];
+			var me = new MouseEvent("mousedown", {
+				clientX: touch.clientX,
+				clientY: touch.clientY
+			});
+			canvas.dispatchEvent(me);
+		}, false);
+
+		canvas.addEventListener("touchend", function (e) {
+			var me = new MouseEvent("mouseup", {});
+			canvas.dispatchEvent(me);
+		}, false);
+
+		function getMousePos(canvasDom, mouseEvent) {
+			var rect = canvasDom.getBoundingClientRect();
+			return {
+				x: mouseEvent.clientX - rect.left,
+				y: mouseEvent.clientY - rect.top
+			}
+		}
+
+		function getTouchPos(canvasDom, touchEvent) {
+			var rect = canvasDom.getBoundingClientRect();
+			return {
+				x: touchEvent.touches[0].clientX - rect.left,
+				y: touchEvent.touches[0].clientY - rect.top
+			}
+		}
+
+		function renderCanvas() {
+			if (drawing) {
+				ctx.moveTo(lastPos.x, lastPos.y);
+				ctx.lineTo(mousePos.x, mousePos.y);
+				ctx.stroke();
+				lastPos = mousePos;
+			}
+		}
+
+		// Prevent scrolling when touching the canvas
+		document.body.addEventListener("touchstart", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+		}, false);
+		document.body.addEventListener("touchend", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+		}, false);
+		document.body.addEventListener("touchmove", function (e) {
+			if (e.target == canvas) {
+				e.preventDefault();
+			}
+		}, false);
+
+		(function drawLoop() {
+			requestAnimFrame(drawLoop);
+			renderCanvas();
+		})();
+
+		function clearCanvas() {
+			canvas.width = canvas.width;
+		}
+
+		// Set up the UI
+		var sigText = document.getElementById("sig-dataUrl");
+		var sigImage = document.getElementById("sig-image");
+		var clearBtn = document.getElementById("sig-clearBtn");
+		var submitBtn = document.getElementById("sig-submitBtn");
+		clearBtn.addEventListener("click", function (e) {
+			clearCanvas();
+			sigText.innerHTML = "Data URL for your signature will go here!";
+			sigImage.setAttribute("src", "");
+		}, false);
+		submitBtn.addEventListener("click", function (e) {
+			var dataUrl = canvas.toDataURL();
+			sigText.innerHTML = dataUrl;
+			sigImage.setAttribute("src", dataUrl);
+		}, false);
+
+	})();
+</script>
+
+
+
+

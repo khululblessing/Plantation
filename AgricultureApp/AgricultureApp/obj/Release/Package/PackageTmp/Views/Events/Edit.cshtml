@@ -1,0 +1,75 @@
+﻿@model AgricultureApp.Models.EventManagement.Event
+
+@{
+	ViewBag.Title = "Edit";
+}
+
+<h2>Update Event Details</h2>
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+		@Html.HiddenFor(model => model.Id)
+
+		<div class="form-group" style="display:none">
+			@Html.Label("Capacity", htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				<input type="text" name="capacity" id="capacity" class="form-control" />
+				@Html.ValidationMessageFor(model => model.EventImageUrl, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			@Html.LabelFor(model => model.target, htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				@Html.DropDownListFor(model => model.target, GetTargetSelectList(), "Select a target", new { @class = "form-control" })
+				@Html.ValidationMessageFor(model => model.target, "", new { @class = "text-danger" })
+			</div>
+		</div>
+
+		<div class="form-group">
+			<div class="col-md-offset-2 col-md-10">
+				<input type="submit" value="Save" class="btn btn-default" />
+			</div>
+		</div>
+	</div>
+}
+
+@functions {
+
+	public SelectList GetTargetSelectList()
+	{
+
+		var staff = new List<SelectListItem>
+{
+			new SelectListItem { Value = "Learners", Text = "Learners" },
+			new SelectListItem { Value = "Staff", Text = "Staff" }
+		};
+
+		return new SelectList(staff, "Value", "Text");
+	}
+}
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+	$(document).ready(function () {
+		// Initially, hide the TicketPrice field if IsFree is checked
+		if ($('#IsFree').is(':checked')) {
+			$('#ticketPrice').hide();
+		}
+
+		// Add an event handler to the IsFree checkbox
+		$('#IsFree').change(function () {
+			if ($(this).is(':checked')) {
+				$('#ticketPrice').hide();
+			} else {
+				$('#ticketPrice').show();
+			}
+		});
+	});
+</script>

@@ -1,0 +1,16 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.Cancel>
+
+@{
+    ViewBag.Title = "ConfirmLetter";
+}
+
+<h2>Cancellation Confirmation</h2>
+
+
+
+@foreach (var item in Model) {
+    <div>
+		<img src="@item.signature" style="width:200px" alt="Alternate Text" />
+    </div>
+}
+

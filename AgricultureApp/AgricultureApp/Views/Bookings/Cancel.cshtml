@@ -1,0 +1,17 @@
+﻿
+@{
+    ViewBag.Title = "Cancel";
+}
+
+<h2>Cancel Booking</h2>
+
+<form action="@Url.Action("Cancel","Bookings")" method="post" style="font-size: 18px">
+	<p class="label-warning">Hi @ViewBag.Name, It`s so unfortunate you wish to cancel an appointment you made with us, please enter why you wish to cancel below</p>
+	<hr />
+	<center>
+		<label style="width:300px"><b>Why you wish to cancel?</b><textarea name="reason" placeholder="Tell us more on why you want to cancel" class="form-control" style="height:100px; border:1px solid black; font-size:18px"></textarea></label>
+		<br />
+		<br />
+		<input type="submit" class="btn btn-success" value="Send Cancellation Request" />
+	</center>
+</form>

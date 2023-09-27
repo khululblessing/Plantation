@@ -1,0 +1,322 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventsManager.Rental>
+
+@{
+	ViewBag.Title = "Index";
+	var message = TempData["Index"] ?? string.Empty;
+}
+
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<style>
+	.order-track {
+		margin-top: 2rem;
+		padding: 0 1rem;
+		border-top: 1px dashed #2c3e50;
+		padding-top: 2.5rem;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.order-track-step {
+		display: flex;
+		height: 7rem;
+	}
+
+		.order-track-step:last-child {
+			overflow: hidden;
+			height: 4rem;
+		}
+
+			.order-track-step:last-child .order-track-status span:last-of-type {
+				display: none;
+			}
+
+	.order-track-status {
+		margin-right: 1.5rem;
+		position: relative;
+	}
+
+	.order-track-status-dot {
+		display: block;
+		width: 2.2rem;
+		height: 2.2rem;
+		border-radius: 50%;
+		background: #f05a00;
+	}
+
+	.order-track-status-line {
+		display: block;
+		margin: 0 auto;
+		width: 2px;
+		height: 7rem;
+		background: #f05a00;
+	}
+
+	.order-track-text-stat {
+		font-size: 1.8rem;
+		font-weight: 500;
+		margin-bottom: 3px;
+	}
+
+	.order-track-text-sub {
+		font-size: 1rem;
+		font-weight: 300;
+	}
+
+	.order-track {
+		transition: all .3s height 0.3s;
+		transform-origin: top center;
+	}
+
+
+	.order-track-status-dot.active {
+		display: block;
+		width: 2.2rem;
+		height: 2.2rem;
+		border-radius: 50%;
+		background: #4cff00;
+	}
+
+
+	.order-track-status-line.active {
+		display: block;
+		margin: 0 auto;
+		width: 2px;
+		height: 7rem;
+		background: #4cff00;
+	}
+</style>
+
+<h2>Rental Details</h2>
+<hr />
+<div style="padding:5px">
+	@foreach (var item in Model)
+	{
+		<center>
+			<div>
+				<a><img src="data:image/png;base64,@Convert.ToBase64String(item.itemImage, 0, item.itemImage.Length)" alt="Room Image" /></a>
+			</div>
+			@if (!item.isPaid)
+			{
+				<a class="btn btn-success" href="~/Rentals/Invoice?id=@item.Id">Payment</a>
+			}
+			
+			@if (item.isPaid&&!item.isCollected)
+			{
+				<p class="label-warning" style="padding:5px;color:red;font-size:1.7rem">Awaiting collection</p>
+			}
+
+		</center>
+		<div style="display:flex;justify-content:space-between;align-items:center">
+			<div>
+				Customer Details
+				<hr />
+				<p><b>Name:</b> @item.name</p>
+				<p><b>Surname:</b> @item.surname</p>
+				<p><b>Email:</b> @item.email</p>
+			</div>
+			<div>
+				Item Details
+				<hr />
+				<p><b>Item Name:</b> @item.itemName</p>
+				<p><b>Cost/Day:</b> @item.itemCost.ToString("R0.00")</p>
+			</div>
+			<div>
+				Rental Details
+				<hr />
+				<p><b>Days:</b> @item.days Day(s) </p>
+				<p><b>Total Cost:</b> @item.total.ToString("R0.00")</p>
+			</div>
+		</div><div>
+			<section class="root">
+				<div class="order-track">
+					@if (item.isRequested && item.isPaid == false)
+					{
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">Rental Rquested</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Paid
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Collected
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Returned
+								</p>
+							</div>
+						</div>
+					}
+					@if (item.isRequested && item.isPaid && !item.isCollected && !item.isReturned)
+					{
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">Rental Rquested</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Paid
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Collected
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Returned
+								</p>
+							</div>
+						</div>
+					}
+					@if (item.isRequested && item.isPaid && item.isCollected && !item.isReturned)
+					{
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">Rental Rquested</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Paid
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Collected
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot"></span>
+								<span class="order-track-status-line"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Returned
+								</p>
+							</div>
+						</div>
+					}
+					@if (item.isRequested && item.isPaid && item.isCollected && item.isReturned)
+					{
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">Rental Rquested</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Paid
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Collected
+								</p>
+							</div>
+						</div>
+						<div class="order-track-step">
+							<div class="order-track-status">
+								<span class="order-track-status-dot active"></span>
+								<span class="order-track-status-line active"></span>
+							</div>
+							<div class="order-track-text">
+								<p class="order-track-text-stat">
+									Returned
+								</p>
+							</div>
+						</div>
+					}
+				</div>
+			</section>
+		</div>
+	}
+</div>
+

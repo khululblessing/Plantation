@@ -1,0 +1,212 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventManagement.Event>
+@{
+	ViewBag.Title = "CalendarIndex";
+}
+
+<style>
+	body {
+		font-family: Arial, sans-serif;
+	}
+
+	.calendar {
+		max-width: 400px;
+		margin: 0 auto;
+		text-align: center;
+		border: 1px solid #ccc;
+		border-radius: 5px;
+		padding: 10px;
+	}
+
+	.calendar-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 10px;
+	}
+
+	button {
+		background: none;
+		border: none;
+		cursor: pointer;
+	}
+
+		button:hover {
+			text-decoration: underline;
+		}
+
+	.calendar-grid {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 5px;
+	}
+
+	.day {
+		width: 30px;
+		height: 30px;
+		text-align: center;
+		line-height: 30px;
+		border: 1px solid #ccc;
+		border-radius: 50%;
+		cursor: pointer;
+	}
+
+	.selected {
+		background-color: #3498db;
+		color: white;
+	}
+
+	/* ... (existing styles) */
+
+	.calendar-days {
+		display: grid;
+		grid-template-columns: repeat(7, 1fr);
+		gap: 5px;
+		font-weight: bold;
+		margin-bottom: 5px;
+	}
+
+	.day-name {
+		text-align: center;
+	}
+</style>
+<div style="padding:2%; display:flex;justify-content:space-evenly;align-items:center">
+	<div class="calendar" style="background-color:#ffd800">
+		<div class="calendar-header">
+			<button id="prev-month" style="font-size:30px"><b><</b></button>
+			<h2 id="current-month-year"></h2>
+			<button id="next-month" style="font-size:30px"><b>></b></button>
+		</div>
+		<div class="calendar-days">
+			<div class="day-name">Sun</div>
+			<div class="day-name">Mon</div>
+			<div class="day-name">Tue</div>
+			<div class="day-name">Wed</div>
+			<div class="day-name">Thu</div>
+			<div class="day-name">Fri</div>
+			<div class="day-name">Sat</div>
+		</div>
+		<div class="calendar-grid" id="calendar-grid"></div>
+	</div>
+	<div>
+		@if (Model != null && Model.Count() > 0)
+		{
+			
+				<table class="table">
+					<tr>
+						<td>Title</td>
+						<td>Date</td>
+					</tr>
+					@foreach (var i in Model)
+					{
+					<tr>
+						<td>@i.Title</td>
+						<td>@i.Date</td>
+						<td><a href="@Url.Action("Index", "Events", new { id = i.Id })">Details</a></td>
+						@if (User.IsInRole("Assistant") && !i.isStarted)
+						{
+							<td><a class="btn btn-success" href="@Url.Action("Attend", "Events", new { id = i.Id })">Start Event</a></td>
+						}
+						@if (User.IsInRole("Assistant") && i.isStarted && !i.isEnded)
+						{
+							<td><a class="btn btn-danger" href="@Url.Action("End", "Events", new { id = i.Id })">End Event</a></td>
+						}
+					</tr>
+					}
+				</table>
+		}
+		else
+		{
+			<center><p class="label-warning" style="padding:3%;">Please select a date to see events</p></center>
+		}
+	</div>
+</div>
+
+<script>
+	document.addEventListener("DOMContentLoaded", function () {
+		const calendarGrid = document.getElementById("calendar-grid");
+		const currentMonthYear = document.getElementById("current-month-year");
+		const prevMonthButton = document.getElementById("prev-month");
+		const nextMonthButton = document.getElementById("next-month");
+
+		let selectedDate = null;
+		let currentYear = new Date().getFullYear();
+		let currentMonth = new Date().getMonth();
+
+		function renderCalendar(year, month) {
+			calendarGrid.innerHTML = "";
+			const firstDayOfMonth = new Date(year, month, 1);
+			const lastDayOfMonth = new Date(year, month + 1, 0);
+			const daysInMonth = lastDayOfMonth.getDate();
+			const firstDayOfWeek = firstDayOfMonth.getDay();
+
+			currentMonthYear.textContent = `${getMonthName(month)} ${year}`;
+
+			// Create day elements for the calendar
+			for (let i = 0; i < firstDayOfWeek; i++) {
+				const emptyDay = document.createElement("div");
+				emptyDay.classList.add("day", "empty");
+				calendarGrid.appendChild(emptyDay);
+			}
+
+			for (let day = 1; day <= daysInMonth; day++) {
+				const dayElement = document.createElement("div");
+				dayElement.textContent = day;
+				dayElement.classList.add("day");
+				calendarGrid.appendChild(dayElement);
+
+				dayElement.addEventListener("click", () => {
+					if (selectedDate) {
+						selectedDate.classList.remove("selected");
+					}
+					selectedDate = dayElement;
+					selectedDate.classList.add("selected");
+
+					// Construct the URL with the selected date
+					const formattedDate = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+					const url = `/Events/CalendarIndex?date=${formattedDate}`;
+
+					// Redirect to the constructed URL
+					window.location.href = url;
+				});
+			}
+		}
+
+		function getMonthName(month) {
+			const monthNames = [
+				"January", "February", "March", "April", "May", "June",
+				"July", "August", "September", "October", "November", "December"
+			];
+			return monthNames[month];
+		}
+
+		function updateCalendar() {
+			renderCalendar(currentYear, currentMonth);
+		}
+
+		// Initialize the calendar
+		updateCalendar();
+
+		prevMonthButton.addEventListener("click", () => {
+			if (currentMonth === 0) {
+				currentMonth = 11;
+				currentYear--;
+			} else {
+				currentMonth--;
+			}
+			updateCalendar();
+		});
+
+		nextMonthButton.addEventListener("click", () => {
+			if (currentMonth === 11) {
+				currentMonth = 0;
+				currentYear++;
+			} else {
+				currentMonth++;
+			}
+			updateCalendar();
+		});
+
+	});
+
+</script>
+

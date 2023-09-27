@@ -1,0 +1,130 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventManagement.Event>
+
+@{
+	ViewBag.Title = "Index";
+	var message = TempData["Index"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<h1>Event Tracking</h1>
+<a class="btn btn-info" href="@Url.Action("CalendarIndex","Events")">Back To Calendar</a>
+<hr />
+@foreach (var i in Model)
+{
+
+	if (!User.IsInRole("Assistant"))
+	{
+		<div style="width:100%;padding:2%">
+			<center><h2>@i.Title</h2></center>
+			<hr />
+			<div style="display:flex; justify-content:space-evenly; align-items:center">
+				<div>
+					<center>
+						<h3>@i.Date</h3>
+						<h3>@i.Time</h3>
+					</center>
+					<hr />
+					<center>
+						<p>@i.Description</p>
+					</center>
+				</div>
+				<div>
+					<img src="data:image/png;base64,@Convert.ToBase64String(i.EventImageUrl, 0, i.EventImageUrl.Length)" style="width: 200px; height: 200px" alt="image description" />
+				</div>
+			</div>
+			@if (!i.isStarted)
+			{
+				<hr />
+				<center><h3>Event Loading</h3></center>
+				<div class="countDown" id="countDown" data-event-date="@i.Date" style="display: flex; justify-content:space-between; background-color:#00ff90a6; padding:2%"></div>
+			}
+			@if (ViewBag.Tickets != null)
+			{
+				<hr />
+				<div style="display:flex; justify-content:space-between; align-items:center">
+					<a class="btn btn-success" href="@Url.Action("Tickets", "Events", new { id = i.Id })">My Tickets</a>
+					<a class="btn btn-info" href="@Url.Action("Recie	pt", "Events", new { id = i.Id})">Receipt</a>
+				</div>
+			}
+		</div>
+	}
+	else
+	{
+		<div style="width:100%;padding:2%">
+			<center><h2>@i.Title</h2></center>
+			<hr />
+			<div style="display:flex; justify-content:space-evenly; align-items:center">
+				<div>
+					<center>
+						<h3>@i.Date</h3>
+						<h3>@i.Time</h3>
+					</center>
+					<hr />
+					<center>
+						<p>@i.Description</p>
+					</center>
+				</div>
+				<div>
+					<img src="data:image/png;base64,@Convert.ToBase64String(i.EventImageUrl, 0, i.EventImageUrl.Length)" style="width: 200px; height: 200px" alt="image description" />
+				</div>
+			</div>
+			@if (!i.isStarted)
+			{
+				<hr />
+				<center><h3>Event Loading</h3></center>
+				<div class="countDown" id="countDown" data-event-date="@i.Date" style="display: flex; justify-content:space-between; background-color:#00ff90a6; padding:2%"></div>
+			}
+			@if (i.isEnded)
+			{
+				<hr />
+				<a class="btn btn-info" href="@Url.Action("Analyse", "Events", new { id = i.Id})">Analyse Event</a>
+			}
+		</div>
+	}
+}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<script>
+	// Function to update countdown timers
+	function updateCountdowns() {
+		const countDownElements = document.querySelectorAll(".countDown");
+
+		countDownElements.forEach(function (element) {
+			const eventDateStr = element.getAttribute("data-event-date");
+			const eventDate = moment(eventDateStr, "DD MMMM YYYY dddd");
+			const now = moment();
+
+			const timeRemaining = eventDate - now;
+
+			if (timeRemaining <= 0) {
+				// Event has passed, you can handle this case as needed
+				element.innerHTML = "Event has passed";
+			} else {
+				const duration = moment.duration(timeRemaining);
+
+				const days = duration.days();
+				const hours = duration.hours();
+				const minutes = duration.minutes();
+				const seconds = duration.seconds();
+
+				const countdownHTML = `
+						<h2>${days} days</h2>
+						<h2>${hours} hours</h2>
+						<h2>${minutes} minutes</h2>
+						<h2>${seconds} seconds</h2>
+				`;
+
+				element.innerHTML = countdownHTML;
+			}
+		});
+	}
+	// Initial update of countdowns
+	updateCountdowns();
+	// Update countdowns every second
+	setInterval(updateCountdowns, 1000);
+</script>
+
+

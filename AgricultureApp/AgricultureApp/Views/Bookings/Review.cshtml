@@ -1,0 +1,93 @@
+﻿@{
+	ViewBag.Title = "Review";
+	var mess = TempData["Review"] ?? null;
+}
+<script>
+	var msg = '@mess'
+	if (msg)
+		alert(msg)
+</script>
+
+
+<h2>Review Request</h2>
+<hr />
+@foreach (var i in Model)
+{
+	string appointmentDateString = "(" + i.date + ")";
+	string dateFormat = "(dddd, dd MMMM yyyy)";
+	DateTime appointmentDate = DateTime.ParseExact(appointmentDateString, dateFormat, null);
+	TimeSpan timeLeft = appointmentDate - DateTime.Today;
+	int daysLeft = timeLeft.Days;
+
+	string decision = "";
+
+	if (daysLeft > 2)
+	{
+		decision = "Offer full refund to virtual wallet.";
+	}
+	else if (daysLeft > 0 && daysLeft <= 2)
+	{
+		decision = "Offer 50% refund to virtual wallet.";
+	}
+	else if (daysLeft <= 0)
+	{
+		decision = "Reject refund.";
+	}
+
+	<form action="@Url.Action("Review","Bookings")" method="post" style="font-size: 18px">
+		<p class="label-warning"><b>Reason for cancellation:</b><br /><br />@i.reason</p>
+		<br />
+		<div>
+			<label><b>Appointment Date</b>: @appointmentDate.ToString("dddd, dd MMMM yyyy")</label>
+			<br />
+			<br />
+			<center><p class="label-warning"><b>Refund Decision</b>:<br /><br /> Because the appointment has @daysLeft days left to take place, we recommend: @decision</p></center>
+		</div>
+		<br />
+		<div>
+			<label>
+				<b>Decision:</b>
+				<select class="form-control" name="decision">
+					<option disabled selected>--- Select Decision ---</option>
+					<option value="approve" @if (decision == "Offer 50% refund to virtual wallet." || decision == "Offer full refund to virtual wallet.") { <text> selected="selected" </text> }>Approve Request</option>
+					<option value="reject" @if (decision == "Reject refund.") { <text> selected="selected" </text> }>Reject Request</option>
+				</select>
+			</label>
+			<br />
+			<br />
+			<label class="rejreason-label" @if (decision == "Offer 50% refund to virtual wallet." || decision == "Offer full refund to virtual wallet.") { <text> style="display:none" </text> }>
+				<b>Why are you rejecting?</b><br /><b class="label-warning">you can also modify the reason</b>
+				<textarea placeholder="Reason for approving is unnecessary" style="height:200px;width:300px" name="rejreason" class="form-control">@if (decision == "Reject refund.") {<text>We regret to inform you of our rejection to proceed with your request as it was requested in such a short notice, so there will be no refund due to covering our expenses incurred during the arrangement of your appointment. Final Decision: Refund Rejected.</text>}</textarea>
+			</label>
+		</div>
+		<br />
+		<input type="submit" class="btn btn-success" value="Submit Decision" />
+		<script>
+            var selectElement = document.querySelector('select[name="decision"]');
+            var textareaElement = document.querySelector('textarea[name="rejreason"]');
+            var rejreasonLabel = document.querySelector('.rejreason-label');
+
+            selectElement.addEventListener('change', function () {
+                var decision = this.options[this.selectedIndex].text;
+                if (decision === 'Approve Request') {
+                    rejreasonLabel.style.display = 'none';
+                    textareaElement.value = '';
+                } else if (decision === 'Reject Request') {
+                    rejreasonLabel.style.display = '';
+                    textareaElement.value = '@(decision == "Reject refund." ? "We regret to inform you of our rejection to proceed with your request as it was requested in such a short notice, so there will be no refund due to covering our expenses incurred during the arrangement of your appointment. Final Decision: Refund Rejected." : "")';
+                }
+
+                if (confirm('Please note that the decision is: ' + decision + '.\nDo you want to proceed with your decision?')) {
+                    // User clicked "Ok"
+                    // Perform further actions or submit the form
+                } else {
+                    // User clicked "Cancel"
+                    // Optionally reset the selection
+                    this.selectedIndex = 0;
+                    rejreasonLabel.style.display = '';
+                    textareaElement.value = '';
+                }
+            });
+		</script>
+	</form>
+}

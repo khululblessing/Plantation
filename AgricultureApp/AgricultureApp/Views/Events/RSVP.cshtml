@@ -1,0 +1,89 @@
+﻿
+@{
+	ViewBag.Title = "RSVP";
+}
+<style>
+	.seat-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		grid-gap: 10px;
+	}
+
+	.seat {
+		width: 50px;
+		height: 50px;
+		background-color: green;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 16px;
+		border: 1px solid #000;
+		cursor: pointer; /* Add a pointer cursor to indicate interactivity */
+	}
+
+		.seat.selected {
+			background-color: yellow; /* Change the background color for selected seats */
+		}
+
+	.stage {
+		background-color: green;
+		width: 400px;
+		text-align: center;
+		padding: 5%;
+	}
+
+	.venue {
+		width: 500px;
+	}
+</style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCq2OOBxoSD9Tvrkr-55X66-G0bzPtF0ag&libraries=places"></script>
+<h2>RSVP Below</h2>
+<p class="label-warning" style="padding:2%; width:50%;text-align:center">Entrance is free, no fee to be paid</p>
+<div class="venue">
+	<form action="@Url.Action("RSVP","Events")" method="post">
+		<hr />
+		<div class="form-group">
+			@Html.Label("RSVP", htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				<select id="rsvp" name="rsvp" class="form-control">
+					<option disabled selected>--- RSVP ---</option>
+					<option value="attend">I will attend</option>
+					<option value="no attend">Cannot attend</option>
+				</select>
+			</div>
+		</div>
+		<br />
+		<div style="display:none" id="location" class="form-group">
+			@Html.Label("You Address", htmlAttributes: new { @class = "control-label col-md-2" })
+			<div class="col-md-10">
+				<input type="text" name="address" autocomplete="off" class="form-control" id="address" />
+				<p>Purporse: For directions to the venue</p>
+			</div>
+		</div>
+		<br />
+		<div class="form-group">
+			<div class="col-md-10">
+				<br />
+				<input type="submit" value="Confirm and Proceed" class="btn btn-success" />
+			</div>
+		</div>
+	</form>
+</div>
+
+
+<script>
+
+	const l = document.getElementById("location");
+	const address = document.getElementById("address");
+	const rspv = document.getElementById("rsvp");
+	var autocomplete = new google.maps.places.Autocomplete(address);
+	rspv.addEventListener("change", function () {
+		var r = rspv.value;
+
+		if (r === "attend") {
+			l.style.display = "block"; 
+		} else {
+			l.style.display = "none";
+		}
+	});
+</script>

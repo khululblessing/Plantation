@@ -1,0 +1,113 @@
+﻿@model AgricultureApp.Models.EventsManager.Rental
+
+@{
+	ViewBag.Title = "Create";
+}
+
+<h2>Request to rent here</h2>
+
+@using (Html.BeginForm())
+{
+	@Html.AntiForgeryToken()
+
+	<div class="form-horizontal">
+		<h4>Rental</h4>
+		<hr />
+		@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+		<div style="display:flex;justify-content:space-between;align-items:center">
+			<div>
+				<div class="form-group">
+					@Html.LabelFor(model => model.startDate, htmlAttributes: new { @class = "control-label col-md-2" })
+					<div class="col-md-10">
+						<input type="date" name="startDate" class="form-control" id="startDate" />
+						@Html.ValidationMessageFor(model => model.startDate, "", new { @class = "text-danger" })
+					</div>
+				</div>
+
+				<div class="form-group">
+					@Html.LabelFor(model => model.endDate, htmlAttributes: new { @class = "control-label col-md-2" })
+					<div class="col-md-10">
+						<input type="date" name="endDate" class="form-control" id="endDate" />
+						@Html.ValidationMessageFor(model => model.endDate, "", new { @class = "text-danger" })
+					</div>
+				</div>
+
+				<div class="form-group">
+					<div class="col-md-offset-2 col-md-10">
+						<input type="submit" value="Send Request" class="btn btn-default" />
+					</div>
+				</div>
+			</div>
+			<div>
+				<div>
+					<a><img src="data:image/png;base64,@Convert.ToBase64String(ViewBag.Image, 0, ViewBag.Image.Length)" alt="Room Image"/></a>
+				</div>
+				<div>
+					<p class="label-warning" style="padding:5px">Costs for renting item: <b>@ViewBag.Name</b></p>
+					<p><span id="calculatedDays">0</span> days</p>
+					<p><span id="calculatedCost">R 0.00</span></p>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<script>
+	// Get references to the check-in and check-out date inputs
+	var checkinInput = document.getElementById('startDate');
+	var checkoutInput = document.getElementById('endDate');
+	var calculatedDays = document.getElementById('calculatedDays');
+	var calculatedCost = document.getElementById('calculatedCost');
+
+	// Rest of your date constraint logic...
+
+	// Calculate and display days and cost on date change
+	function calculateAndDisplay() {
+		var checkinDate = new Date(checkinInput.value);
+		var checkoutDate = new Date(checkoutInput.value);
+
+		if (!isNaN(checkinDate) && !isNaN(checkoutDate)) {
+			var days = Math.floor((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+			calculatedDays.textContent = days;
+
+			// Modify this logic to calculate cost based on your requirements
+			var cost = days * @ViewBag.Price; // Replace with your actual cost calculation
+			calculatedCost.textContent ='R'+ cost;
+		}
+	}
+
+	// Get the current date
+	var currentDate = new Date().toISOString().split('T')[0];
+
+	// Set the minimum date for check-in to today
+		checkinInput.setAttribute('min', currentDate);
+
+	// Add event listener for check-in date change
+	checkinInput.addEventListener('change', function () {
+		// Get the selected check-in date
+		var checkinDate = new Date(this.value);
+
+		// Calculate the minimum check-out date
+		var minCheckoutDate = new Date(checkinDate);
+		minCheckoutDate.setDate(checkinDate.getDate() + 1);
+
+		// Set the minimum date for check-out
+		checkoutInput.setAttribute('min', minCheckoutDate.toISOString().split('T')[0]);
+		calculateAndDisplay();
+	});
+
+	// Add event listener for check-out date change
+	checkoutInput.addEventListener('change', function () {
+		// Get the selected check-out date
+		var checkoutDate = new Date(this.value);
+
+		// Calculate the maximum check-in date
+		var maxCheckinDate = new Date(checkoutDate);
+		maxCheckinDate.setDate(checkoutDate.getDate() - 1);
+
+		// Set the maximum date for check-in
+		checkinInput.setAttribute('max', maxCheckinDate.toISOString().split('T')[0]);
+		calculateAndDisplay();
+	});
+</script>

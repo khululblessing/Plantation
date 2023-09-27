@@ -1,0 +1,38 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventsManager.Rental>
+
+@{
+	ViewBag.Title = "Contract";
+}
+
+<h2>Rental Confirmation</h2>
+
+@foreach (var i in Model)
+{
+	<div style="padding:5px">
+		<center>
+			<p>This is to confirm that @i.name @i.surname has collected their rented item</p>
+			<p>This item is to due to be returned by @i.endDate and failure to do so will result in penelization which is to be paid by cash</p>
+		</center>
+		<hr />
+		<center style="display:flex;justify-content:space-between">
+			<div style="float:left">
+				Date Collected: @DateTime.Now.ToString("dd MMMM yyyy dddd")
+				<br />
+				Signature: <a><img src="@i.signature" alt="Signature" style="width: 100px; height:75px" /></a>
+			</div>
+			<div style="float:right">
+				Date Returned: @if (!i.isReturned)
+				{
+					<p class="label-warning" style="padding:5px">Item not yet returned</p>
+				}
+				else
+				{
+					@DateTime.Now.ToString("dd MMMM yyyy dddd")
+					<br />
+					<p>Admin Signature: </p><a><img src="@i.assistantSign" alt="Signature" style="width: 100px; height:75px" /></a>
+				}
+			</div>
+		</center>
+	</div>
+
+}

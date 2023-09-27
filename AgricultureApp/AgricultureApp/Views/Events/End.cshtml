@@ -1,0 +1,53 @@
+﻿
+@{
+	ViewBag.Title = "End";
+}
+
+<!-- Signature Pad CSS -->
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature-pad.css">
+
+<!-- Signature Pad JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/signature_pad/1.5.3/signature_pad.min.js"></script>
+<h2>End Event Here</h2>
+<style>
+	.signature {
+		border: 5px solid black;
+	}
+</style>
+
+<div>
+	<p>Please leave a signature below to end the event, please not that after submitting this form, the event will now be inactive</p>
+	<hr />
+	<canvas class="signature" id="signature-pad" width="400" height="200"></canvas>
+	<br />
+	<button id="clear-button">Clear</button>
+	<br />
+	<br />
+	<form action="@Url.Action("End","Events")" method="post">
+		<textarea hidden id="signature-data" name="signature" rows="5" cols="50" placeholder="Signature data will be filled here"></textarea>
+		<input type="submit" class="btn btn-info" value="End Event" />
+	</form>
+</div>
+<script>
+	// Initialize the Signature Pad
+	var canvas = document.getElementById('signature-pad');
+	var signaturePad = new SignaturePad(canvas);
+
+	// Get the clear button element
+	var clearButton = document.getElementById('clear-button');
+
+	// Get the signature data textarea element
+	var signatureData = document.getElementById('signature-data');
+
+	// Clear the signature pad when the "Clear" button is clicked
+	clearButton.addEventListener('click', function () {
+		signaturePad.clear();
+		signatureData.value = ''; // Clear the signature data as well
+	});
+
+	// Listen for changes in the signature pad and update the signature data textarea
+	signaturePad.onEnd = function () {
+		var dataURL = signaturePad.toDataURL(); // Get the signature data as a Data URL
+		signatureData.value = dataURL; // Fill the textarea with the signature data
+	};
+</script>

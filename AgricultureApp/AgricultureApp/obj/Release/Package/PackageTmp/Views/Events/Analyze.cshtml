@@ -1,0 +1,108 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventManagement.Event>
+@{
+	ViewBag.Title = "Analyze";
+	var message = TempData["Analyze"] ?? string.Empty;
+}
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+
+<h2>Analyze</h2>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div>
+	<canvas id="totalTicketsChart" width="400" height="200"></canvas>
+</div>
+<hr />
+<hr />
+<div>
+	<canvas id="projectedProfitChart" width="400" height="200"></canvas>
+</div>
+@section scripts {
+	<script>
+        // Get canvas elements
+        var totalTicketsCtx = document.getElementById('totalTicketsChart').getContext('2d');
+        var projectedProfitCtx = document.getElementById('projectedProfitChart').getContext('2d');
+
+        // Get the maximum value for the vertical axis (total tickets made available)
+        var maxTickets = @ViewBag.TotalTickets;
+
+        // Create data for the total tickets chart
+        var totalTicketsChartData = {
+            labels: ['Total Tickets', 'Tickets Sold', 'Attendees'],
+            datasets: [{
+                label: 'Event Data',
+                data: [@ViewBag.TotalTickets, @ViewBag.TicketsSold, @ViewBag.Attendees],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)', // Total Tickets
+                    'rgba(54, 162, 235, 0.2)', // Tickets Sold
+                    'rgba(255, 206, 86, 0.2)', // Attendees
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        // Create data for the projected profit chart (without comparison)
+        var projectedProfitChartData = {
+            labels: ['Projected Profit'],
+            datasets: [{
+                label: 'Projected Profit',
+                data: [@ViewBag.ProjectedProfit],
+                backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+                borderColor: ['rgba(75, 192, 192, 1)'],
+                borderWidth: 1
+            }]
+        };
+
+        // Create the total tickets chart
+        var totalTicketsChart = new Chart(totalTicketsCtx, {
+            type: 'bar',
+            data: totalTicketsChartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: maxTickets  // Set the maximum value for the y-axis
+                    }
+                }
+            }
+        });
+
+        // Create the projected profit chart
+        var projectedProfitChart = new Chart(projectedProfitCtx, {
+            type: 'bar',
+            data: projectedProfitChartData,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Output the projected profit data to the console
+console.log('Projected Profit Data:', [@ViewBag.ProjectedProfit]);
+
+// Create data for the projected profit chart
+var projectedProfitChartData = {
+    labels: ['Projected Profit'],
+    datasets: [{
+        label: 'Projected Profit',
+        data: [@ViewBag.ProjectedProfit],
+        backgroundColor: ['rgba(75, 192, 192, 0.2)'],
+        borderColor: ['rgba(75, 192, 192, 1)'],
+        borderWidth: 1
+    }]
+};
+
+	</script>
+}

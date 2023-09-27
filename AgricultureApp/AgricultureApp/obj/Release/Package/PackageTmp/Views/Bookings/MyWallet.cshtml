@@ -1,0 +1,34 @@
+﻿@model IEnumerable<AgricultureApp.Models.Appointment.Wallet>
+
+@{
+	ViewBag.Title = "MyWallet";
+}
+
+<h2>MyWallet</h2>
+
+<meta charset="UTF-8">
+<title>E-wallet</title>
+<link href="~/Style/Wallet.css" rel="stylesheet" />
+@foreach (var i in Model)
+{
+
+	<div class="wallet-container text-center" style="padding:2%">
+		<p class="page-title"><i class="fa fa-align-left"></i>My E-wallet<i class="fa fa-user"></i></p>
+
+		<div class="amount-box text-center">
+			<img src="https://lh3.googleusercontent.com/ohLHGNvMvQjOcmRpL4rjS3YQlcpO0D_80jJpJ-QA7-fQln9p3n7BAnqu3mxQ6kI4Sw" alt="wallet">
+			<p>Total Balance</p>
+			<p class="amount">@i.amount.ToString("R0.00")</p>
+		</div>
+		<hr />
+		<div class="txn-history">
+			<p><b>History</b></p>
+			<p class="txn-list" style="font-size:20px;">Payments<span class="debit-amount">-@i.expense.ToString("R0.00")</span></p>
+
+			<p class="txn-list" style="font-size:20px;">Income<span class="credit-amount">+@i.income.ToString("R0.00")</span></p>
+		</div>
+		<hr />
+	</div>
+
+
+}

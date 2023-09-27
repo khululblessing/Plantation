@@ -1,0 +1,300 @@
+﻿@using AgricultureApp.Models.EventManagement
+@{
+	ViewBag.Title = "Reciept";
+	IEnumerable<Event> events = ViewBag.Event as IEnumerable<Event>;
+	IEnumerable<Ticket> tickets = ViewBag.Tickets as IEnumerable<Ticket>;
+	double total = 0.0;
+}
+
+<style>
+	.receipt__container {
+		position: fixed;
+		z-index: 9999;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		border-radius: 12px;
+		box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
+	}
+
+		.receipt__container .receipt__body {
+			width: 650px;
+			height: 395px;
+			border-radius: 12px;
+			background-color: #fff;
+			position: relative;
+		}
+
+			.receipt__container .receipt__body .left {
+				width: 325px;
+				height: 395px;
+				float: left;
+			}
+
+				.receipt__container .receipt__body .left .left__name, .receipt__container .receipt__body .left .left__items, .receipt__container .receipt__body .left .left__total {
+					border-bottom: 1px solid #e5e5e5;
+					width: 325px;
+				}
+
+				.receipt__container .receipt__body .left .left__name {
+					height: 70px;
+				}
+
+					.receipt__container .receipt__body .left .left__name span:nth-child(1) {
+						color: #32257e;
+						font-size: 20px;
+						display: inline-block;
+						widdth: 50%;
+						line-height: 70px;
+						padding-left: 25px;
+					}
+
+					.receipt__container .receipt__body .left .left__name span:nth-child(2) {
+						color: #c6c6c6;
+						font-size: 15px;
+						display: inline;
+						float: right;
+						width: 50%;
+						line-height: 70px;
+						padding-left: 35px;
+					}
+
+				.receipt__container .receipt__body .left .left__items {
+					height: 162px;
+					padding-left: 25px;
+					padding-top: 12px;
+				}
+
+					.receipt__container .receipt__body .left .left__items span {
+						color: #c6c6c6;
+						text-transform: uppercase;
+						padding-left: 2px;
+					}
+
+					.receipt__container .receipt__body .left .left__items .tickets {
+						display: block;
+						width: 325px;
+						padding-top: 8px;
+					}
+
+						.receipt__container .receipt__body .left .left__items .tickets .type {
+							color: #2e43b0;
+							font-size: 20px;
+							vertical-align: middle;
+							padding-bottom: 7px;
+						}
+
+							.receipt__container .receipt__body .left .left__items .tickets .type:before {
+								content: '';
+								background-image: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/59615/ticket-icon.png);
+								width: 23px;
+								height: 12px;
+								background-repeat: no-repeat;
+								background-size: 23px 12px;
+								display: inline-block;
+								margin-right: 15px;
+								margin-left: 2px;
+							}
+
+						.receipt__container .receipt__body .left .left__items .tickets .price {
+							color: #b6bac5;
+							padding-left: 80px;
+							font-size: 15px;
+							vertical-align: middle;
+							font-weight: bold;
+						}
+
+							.receipt__container .receipt__body .left .left__items .tickets .price:before {
+								font-size: 15px;
+								font-weight: normal;
+								padding-right: 1px;
+							}
+
+					.receipt__container .receipt__body .left .left__items .left__notice {
+						width: 325px;
+						height: 73px;
+					}
+
+				.receipt__container .receipt__body .left .left__total {
+					height: 90px;
+				}
+
+					.receipt__container .receipt__body .left .left__total span {
+						color: #32257e;
+						display: block;
+						width: 325px;
+						padding-left: 25px;
+						line-height: 45px;
+					}
+
+						.receipt__container .receipt__body .left .left__total span:nth-child(1) {
+							padding-top: 5px;
+						}
+
+						.receipt__container .receipt__body .left .left__total span:nth-child(2) {
+							margin-top: -10px;
+						}
+
+				.receipt__container .receipt__body .left .left__notice {
+					color: #b6bac5;
+					font-size: 12px;
+					margin: 15px 25px;
+				}
+
+			.receipt__container .receipt__body .right {
+				border-left: solid 1px #e5e5e5;
+				width: 325px;
+				height: 395px;
+				float: left;
+			}
+
+				.receipt__container .receipt__body .right .right__poster {
+					margin: 0 auto;
+					margin-top: 30px;
+					width: 149px;
+					height: 229.8px;
+					box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+				}
+
+					.receipt__container .receipt__body .right .right__poster#John-Wick-Chapter-2 {
+						background-size: contain;
+					}
+
+				.receipt__container .receipt__body .right .right__title {
+					color: #2e43b0;
+					padding-top: 20px;
+					font-size: 20px;
+					line-height: 20px;
+					display: block;
+					width: 325px;
+					text-align: center;
+				}
+
+				.receipt__container .receipt__body .right .right__time {
+					width: 50%;
+					text-align: center;
+					display: inline-block;
+				}
+
+					.receipt__container .receipt__body .right .right__time span:nth-child(1) {
+						color: #c6c6c6;
+						font-size: 15px;
+						text-transform: uppercase;
+						display: block;
+						padding-top: 20px;
+					}
+
+					.receipt__container .receipt__body .right .right__time span:nth-child(2) {
+						color: #2e43b0;
+						font-size: 20px;
+						display: block;
+					}
+
+				.receipt__container .receipt__body .right .right__cinema {
+					width: 50%;
+					float: right;
+					text-align: center;
+					display: inline-block;
+				}
+
+					.receipt__container .receipt__body .right .right__cinema span:nth-child(1) {
+						color: #c6c6c6;
+						font-size: 15px;
+						text-transform: uppercase;
+						display: block;
+						padding-top: 25px;
+					}
+
+					.receipt__container .receipt__body .right .right__cinema span:nth-child(2) {
+						color: #2e43b0;
+						font-size: 20px;
+						display: block;
+					}
+</style>
+
+<h2>Reciept For My Ticket Purchace</h2>
+<hr />
+
+@foreach (var e in events)
+{
+	<div id="invoice-POS" class="receipt__container">
+		<div class="receipt__body">
+			<div class="left">
+				<div class="left__name">
+					<span>Hey There</span>
+				</div>
+				<div class="left__items">
+					<span>Your Tickets</span>
+					<table class="tickets">
+						@foreach (var t in tickets)
+						{
+							<tr>
+								<td class="type">Seat#@t.seatNo</td>
+								@{total = e.TicketPrice * tickets.Count();}
+								<td class="price">@e.TicketPrice.ToString("R0.00")</td>
+							</tr>
+						}
+					</table>
+				</div>
+				<div class="left__total">
+					<span>Price: <b>@total.ToString("R0.00")</b></span>
+					<span>Date: <b>@e.Date</b></span>
+				</div>
+				<div class="left__notice">
+					<span>
+						We advize your to print your ticket(s) and also arrive 30 minutes before the event start.
+					</span>
+				</div>
+			</div>
+			<div class="right">
+				<div class="right__poster"
+					 id="John-Wick-Chapter-2">
+					<img src="data:image/png;base64,@Convert.ToBase64String(e.EventImageUrl, 0, e.EventImageUrl.Length)" style="width: 200px; height: 200px" alt="image description" />
+				</div>
+				<div class="right__title">
+					<span>@e.Title</span>
+				</div>
+				<div class="right__time">
+					<span>Time</span>
+					<span>@e.Time</span>
+				</div>
+				<div class="right__cinema">
+					<span>@e.vName</span>
+					<span>venue</span>
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<a href="javascript:void(0)" style=" font-size:20px; padding:1%" class="btn-download">Download QR Code PDF  </a>
+<script src="~/HtmlPDFjs/jspdf.debug.js"></script>
+<script src="~/HtmlPDFjs/html2canvas.min.js"></script>
+<script src="~/HtmlPDFjs/html2pdf.min.js"></script>
+<script>
+	const options = {
+		margin: 0.5,
+		filename: 'reciept.pdf',
+		image:
+		{
+			type: 'jpeg',
+			quality: 500
+		},
+		html2canvas:
+		{
+			scale: 1
+		},
+		jsPDF:
+		{
+			unit: 'in',
+			format: 'letter',
+			orientation: 'portrait'
+		}
+	}
+
+	$('.btn-download').click(function (e) {
+		e.preventDefault();
+		const element = document.getElementById('invoice-POS');
+		html2pdf().from(element).set(options).save();
+	});
+</script>

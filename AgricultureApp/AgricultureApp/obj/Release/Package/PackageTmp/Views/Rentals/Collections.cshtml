@@ -1,0 +1,66 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventsManager.Rental>
+
+@{
+	ViewBag.Title = "Collections";
+	var message = TempData["Collections"] ?? string.Empty;
+}
+
+<script>
+    var msg = '@message';
+    if (msg)
+        alert(msg);
+</script>
+<h2>Collections</h2>
+
+<table class="table">
+	<tr>
+		<th>
+			@Html.DisplayNameFor(model => model.itemImage)
+		</th>
+		<th>
+			Client Details
+		</th>
+		<th>
+			Rental Details
+		</th>
+		<th>
+			@Html.DisplayNameFor(model => model.isPaid)
+		</th>
+		<th></th>
+	</tr>
+
+	@foreach (var item in Model)
+	{
+		<tr>
+			<td>
+				<a><img src="data:image/png;base64,@Convert.ToBase64String(item.itemImage, 0, item.itemImage.Length)" style="width:150px" alt="Room Image" /></a>
+			</td>
+			<td>
+				Customer Details
+				<hr />
+				<p><b>Name:</b> @item.name</p>
+				<p><b>Surname:</b> @item.surname</p>
+				<p><b>Email:</b> @item.email</p>
+			</td>
+			<td>
+				Rental Details
+				<hr />
+				<p><b>Item Name:</b> @item.itemName</p>
+				<p><b>Cost/Day:</b> @item.itemCost.ToString("R0.00")</p>
+				<p><b>Days:</b> @item.days Day(s) </p>
+				<p><b>Total Cost:</b> @item.total.ToString("R0.00")</p>
+			</td>
+
+			<td>
+				@Html.DisplayFor(modelItem => item.isPaid)
+			</td>
+			<td>
+				@if (item.isPaid && !item.isCollected)
+				{
+					<a href="~/Rentals/Collect?id=@item.Id">Allow Collection</a>
+				}
+			</td>
+		</tr>
+	}
+
+</table>

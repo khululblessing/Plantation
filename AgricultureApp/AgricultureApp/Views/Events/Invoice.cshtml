@@ -1,0 +1,215 @@
+﻿@model IEnumerable<AgricultureApp.Models.EventManagement.Event>
+@{
+	ViewBag.Title = "Method";
+	double total = 0.0;
+}
+
+<h2>Ticket Purchace Invoice</h2>
+
+<style>
+	#invoice-POS {
+		box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5);
+		padding: 2mm;
+		margin: 0 auto;
+		width: 50%;
+		background: #fff;
+		font-size: 20px;
+	}
+
+		#invoice-POS ::selection {
+			background: #f31544;
+			color: #fff;
+		}
+
+		#invoice-POS ::moz-selection {
+			background: #f31544;
+			color: #fff;
+		}
+
+		#invoice-POS h1 {
+			font-size: 1.5em;
+			color: #222;
+		}
+
+		#invoice-POS h2 {
+			font-size: 0.9em;
+		}
+
+		#invoice-POS h3 {
+			font-size: 1.2em;
+			font-weight: 300;
+			line-height: 2em;
+		}
+
+		#invoice-POS p {
+			font-size: 0.7em;
+			color: #666;
+			line-height: 1.2em;
+		}
+
+		#invoice-POS #top, #invoice-POS #mid, #invoice-POS #bot {
+			/* Targets all id with 'col-' */
+			border-bottom: 1px solid #eee;
+		}
+
+		#invoice-POS #top {
+			min-height: 100px;
+		}
+
+		#invoice-POS #mid {
+			min-height: 80px;
+		}
+
+		#invoice-POS #bot {
+			min-height: 50px;
+		}
+
+		#invoice-POS #top .logo {
+			height: 60px;
+			width: 60px;
+			background: url(http://michaeltruong.ca/images/logo1.png) no-repeat;
+			background-size: 60px 60px;
+		}
+
+		#invoice-POS .clientlogo {
+			float: left;
+			height: 60px;
+			width: 60px;
+			background-size: 60px 60px;
+			border-radius: 50px;
+		}
+
+		#invoice-POS .info {
+			display: block;
+			margin-left: 0;
+		}
+
+		#invoice-POS .title {
+			float: right;
+		}
+
+			#invoice-POS .title p {
+				text-align: right;
+			}
+
+		#invoice-POS table {
+			width: 100%;
+			border-collapse: collapse;
+		}
+
+		#invoice-POS .tabletitle {
+			font-size: 20px;
+			background: #eee;
+		}
+
+		#invoice-POS .service {
+			border-bottom: 1px solid #eee;
+		}
+
+		#invoice-POS .item {
+			width: 24mm;
+		}
+
+		#invoice-POS .itemtext {
+			font-size: 20px;
+		}
+
+		#invoice-POS #legalcopy {
+			margin-top: 5mm;
+		}
+
+	table tr td {
+		padding: 1%;
+	}
+</style>
+
+@foreach (var i in Model)
+{
+	<div id="invoice-POS">
+		<center id="top">
+			<div class="logo">
+				<img src="~/Images/SchoolLogo.jpeg" />
+			</div>
+			<div class="info">
+				<h2>School Management System</h2>
+			</div><!--End Info-->
+		</center><!--End InvoiceTop-->
+		<div id="mid">
+			<div class="info">
+				<h2>School Info</h2>
+				<p>
+					School : School Management<br /><br />
+					Email   : School@gmail.com<br /><br />
+					Phone   : 031 123 1234<br /><br />
+				</p>
+			</div>
+		</div>
+		<div id="bot">
+			<div id="table">
+				<table>
+
+					<tr>
+						<th>Fee Description</th>
+						<th>Qty</th>
+						<th>Ticket Price</th>
+						<th>Total Cost</th>
+					</tr>
+					<tr>
+						<td>Ticket Price</td>
+						<td>@ViewBag.SeatCount</td>
+						<td>@i.TicketPrice.ToString("R0.00")</td>
+							@{total = i.TicketPrice * ViewBag.SeatCount;}
+						<td>@total.ToString("R0.00")</td>
+					</tr>
+				</table>
+			</div>
+			<div id="legalcopy">
+				<center>
+					<p class="legal">
+						<strong>Thank you for having fun with us!</strong>  This is a reciept that serves as a proof that your schoolfees has been settled
+					</p>
+					<hr />
+					@if (ViewBag.Method == "cash")
+					{
+							
+					}
+					else
+					{
+						<a class="btn btn-info" href="@Url.Action("Event", "PaymentBook", new {id=i.Id, ticketCount=ViewBag.SeatCount, seatNo=ViewBag.Seats})">Pay Now</a>
+					}
+				</center>
+			</div>
+		</div>
+	</div>
+}
+<hr />
+<script src="~/HtmlPDFjs/jspdf.debug.js"></script>
+<script src="~/HtmlPDFjs/html2canvas.min.js"></script>
+<script src="~/HtmlPDFjs/html2pdf.min.js"></script>
+<script>
+	const options = {
+		margin: 0.5,
+		filename: 'reciept.pdf',
+		image:
+		{
+			type: 'jpeg',
+			quality: 500
+		},
+		html2canvas:
+		{
+			scale: 1
+		},
+		jsPDF:
+		{
+			unit: 'in',
+			format: 'letter',
+			orientation: 'portrait'
+		}
+	}
+
+	$('.btn-download').click(function (e) {
+		e.preventDefault();
+		const element = document.getElementById('invoice-POS');
+		html2pdf().from(element).set(options).save();
+	});
+</script>
