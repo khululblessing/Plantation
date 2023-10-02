@@ -27,18 +27,18 @@
 		font-size: 18px;
 	}
 
-	button {
-		border: none;
-		outline: 0;
-		display: inline-block;
-		padding: 8px;
-		color: white;
-		background-color: #000;
-		text-align: center;
-		cursor: pointer;
-		width: 100%;
-		font-size: 18px;
-	}
+    button {
+        border: none;
+        outline: 0;
+        display: inline-block;
+        padding: 8px;
+        color: #013220;
+        background-color: #013220;
+        text-align: center;
+        cursor: pointer;
+        width: 100%;
+        font-size: 18px;
+    }
 
 
 
@@ -56,40 +56,84 @@
 		display: flex;
 		justify-content: space-evenly;
 	}
+
+    footer {
+        background-color: #013220;
+        color: #FFF;
+        padding: 10px;
+        text-align: center;
+        margin-top: 50px;
+        width: 100%;
+    }
+
+   /* .form .btn {
+        display: flex;
+        justify-content: center;
+        flex-direction: row;
+        margin-top: 2.5em;
+    } */
+
+    .button1 {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        .button1:hover {
+            background-color: #006400;
+            color: white;
+        }
+
+
+
 </style>
 
 <!-- Container Start -->
 <!-- Row Start -->
 <div class="place">
-	<h2 class="font-weight-bold" style="text-align:center;">Available AgricultureApp Fumigators</h2><br /><hr />
-	<a class="btn btn-info" href="~/Account/Assistant">NEW FUMIGATOR</a><br /><br />
-	<div class="col-lg-12">
-		@if (Model.Count() == 0)
-		{
-			<div class="row">
-				<div class="col-md-12">
-					<div class="alert alert-warning">
-						<b>Note :</b> No fumigators available added at the moment.
-					</div>
-				</div>
-			</div>
-		}
+    <h2 class="font-weight-bold" style="text-align:center;">Available AgricultureApp Fumigators</h2><br /><hr />
 
-		else
-		{
-			foreach (var item in Model)
-			{
-				<div class="card">
-					<img src="data:image/png;base64,@Convert.ToBase64String(item.AssistantImage, 0, item.AssistantImage.Length)" style="width: 180px; height:130px" />
-					<h1>@Html.DisplayFor(modelItem => item.FirstName)  @Html.DisplayFor(modelItem => item.LastName)</h1>
-					<p class="title">Assistant</p>
-					<p> @Html.DisplayFor(modelItem => item.Email)</p>
-					<p><strong>@Html.DisplayFor(modelItem => item.ContactNo)</strong></p>
-				</div>
-			}
+    <div class="btn">
+        <a href="~/Account/Assistant" class="button1">ADD A NEW FUMIGATOR</a>
+    </div>
 
-		}
 
-	</div>
+    <div class="col-lg-12">
+        @if (Model.Count() == 0)
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="alert alert-warning">
+                        <b>Note :</b> No fumigators available added at the moment.
+                    </div>
+                </div>
+            </div>
+        }
+
+        else
+        {
+            foreach (var item in Model)
+            {
+                <div class="card">
+                    <img src="data:image/png;base64,@Convert.ToBase64String(item.AssistantImage, 0, item.AssistantImage.Length)" style="width: 180px; height:130px" />
+                    <h1>@Html.DisplayFor(modelItem => item.FirstName)  @Html.DisplayFor(modelItem => item.LastName)</h1>
+                    <p class="title">Assistant</p>
+                    <p> @Html.DisplayFor(modelItem => item.Email)</p>
+                    <p><strong>@Html.DisplayFor(modelItem => item.ContactNo)</strong></p>
+                </div>
+            }
+
+        }
+
+    </div>
 </div>
+
+
 <!-- Row End -->

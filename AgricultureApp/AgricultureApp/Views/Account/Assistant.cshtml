@@ -18,16 +18,16 @@
 			padding: 20px;
 		}
 
-			.wrapper .title {
-				font-size: 35px;
-				font-weight: 600;
-				text-align: center;
-				line-height: 100px;
-				color: #fff;
-				user-select: none;
-				border-radius: 15px 15px 0 0;
-				background: gray;
-			}
+            .wrapper .title {
+                font-size: 35px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 100px;
+                color: #fff;
+                user-select: none;
+                border-radius: 15px 15px 0 0;
+                background: #123524;
+            }
 
 
 		.content form .user-details {
@@ -60,29 +60,70 @@
 			transition: all 0.3s ease;
 		}
 
-			.user-details .input-box input:focus,
-			.user-details .input-box input:valid {
-				border-color: #9b59b6;
-			}
+            .user-details .input-box input:focus,
+            .user-details .input-box input:valid {
+                border-color: #a9ba9d;
+            }
 
 		form .button {
 			height: 45px;
 			margin: 35px 0
 		}
 
-			form .button input {
-				height: 100%;
-				width: 100%;
-				border-radius: 5px;
-				border: none;
-				color: #fff;
-				font-size: 18px;
-				font-weight: 500;
-				letter-spacing: 1px;
-				cursor: pointer;
-				transition: all 0.3s ease;
-				background: gray;
-			}
+            form .button input {
+                height: 100%;
+                width: 100%;
+                border-radius: 5px;
+                border: none;
+                color: #fff;
+                font-size: 18px;
+                font-weight: 500;
+                letter-spacing: 1px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                background: #123524;
+            }
+
+        .button1 {
+            padding: 0.5em;
+            padding-left: 1.1em;
+            padding-right: 1.1em;
+            border-radius: 5px;
+            margin-right: 0.5em;
+            border: none;
+            outline: none;
+            transition: .4s ease-in-out;
+            background-color: #2e8b57;
+            color: #2e8b57;
+            text-align: center;
+        }
+
+            .button1:hover {
+                background-color: #006400;
+                color: #2e8b57;
+            }
+
+        .button {
+            display: flex; /* Use flexbox to center content */
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            padding: 0.5em;
+            padding-left: 1.1em;
+            padding-right: 1.1em;
+            border-radius: 5px;
+            margin-right: 0.5em;
+            border: none;
+            outline: none;
+            transition: 0.4s ease-in-out;
+            background-color: #013220;
+            color: white;
+        }
+
+        .button:hover {
+            background-color: #006400;
+            color: white;
+        }
+
 	</style>
 </head>
 
@@ -136,10 +177,9 @@
 						@Html.ValidationMessageFor(model => model.ContactNo, "", new { @class = "text-danger" })
 					</div>
 				</div>
-
                 <div class="button">
                     <!-- Submit Button -->
-                    <input type="submit" value="Add Fumigator"  />
+                    <input class="button1" type="submit" value="Add Fumigator"  />
                 </div>
 
             </form>
