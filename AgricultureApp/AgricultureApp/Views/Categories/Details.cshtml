@@ -4,6 +4,34 @@
     ViewBag.Title = "Details";
 }
 
+<style>
+
+    .p {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        .p:hover {
+            background-color: #006400;
+            color: white;
+        }
+
+    .action-link {
+        color: green; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
+</style>
+
 <h2>Details</h2>
 
 <div>
@@ -29,6 +57,6 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Edit", "Edit", new { id = Model.id }, new { @class="p" }) |
+    @Html.ActionLink("Back to List", "Index", null, new { @class="action-link" })
 </p>

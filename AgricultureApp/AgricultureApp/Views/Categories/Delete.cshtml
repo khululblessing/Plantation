@@ -4,6 +4,34 @@
     ViewBag.Title = "Delete";
 }
 
+<style>
+
+    .p {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        .p:hover {
+            background-color: #ff0000;
+            color: white;
+        }
+
+    .action-link {
+        color: green; 
+        margin-right: 10px;
+        text-decoration: none; 
+    }
+
+</style>
+
 <h2>Delete</h2>
 
 <h3>Are you sure you want to delete this?</h3>
@@ -33,8 +61,8 @@
         @Html.AntiForgeryToken()
 
         <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-default" /> |
-            @Html.ActionLink("Back to List", "Index")
+            <input type="submit" value="Delete" class="p" /> |
+            @Html.ActionLink("Back to List", "Index", null, new { @class = "action-link"})
         </div>
     }
 </div>

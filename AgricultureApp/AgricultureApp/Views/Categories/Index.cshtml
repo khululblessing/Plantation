@@ -24,6 +24,18 @@
             color: white;
         }
 
+    .action-link {
+        color: green; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
+    .action {
+        color: red; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
 </style>
 
 <h2>Index</h2>
@@ -51,9 +63,9 @@
             @Html.DisplayFor(modelItem => item.description)
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.id })
+            @Html.ActionLink("Edit", "Edit", new { id=item.id }, new { @class = "action-link" }) |
+            @Html.ActionLink("Details", "Details", new { id=item.id }, new { @class = "action-link" }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.id }, new { @class = "action" })
         </td>
     </tr>
 }

@@ -5,6 +5,40 @@
 	Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<style>
+
+    p {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        p:hover {
+            background-color: #006400;
+            color: white;
+        }
+
+    .action-link {
+        color: green; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
+    .action {
+        color: red; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
+</style>
+
 <h2>Index</h2>
 @if (ViewBag.bookingId == null)
 {
@@ -44,9 +78,9 @@
 			<td>
 				@if (User.IsInRole("Admin"))
 				{
-					@Html.ActionLink("Edit -- ", "Edit", new { id = item.Id }) 
-					@Html.ActionLink("Details -- ", "Details", new { id = item.Id }) 
-					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+					@Html.ActionLink("Edit -- ", "Edit", new { id = item.Id }, new { @class = "action-link" }) 
+					@Html.ActionLink("Details -- ", "Details", new { id = item.Id }, new { @class = "action-link" }) 
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id }, new { @class = "action" })
 				}
 				else
 				{

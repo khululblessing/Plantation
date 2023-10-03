@@ -4,6 +4,34 @@
     ViewBag.Title = "Edit";
 }
 
+<style>
+
+    .p {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        .p:hover {
+            background-color: #006400;
+            color: white;
+        }
+
+    .action-link {
+        color: green; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
+</style>
+
 <h2>Edit</h2>
 
 
@@ -35,12 +63,12 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="p" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "Index", null, new { @class = "action" })
 </div>

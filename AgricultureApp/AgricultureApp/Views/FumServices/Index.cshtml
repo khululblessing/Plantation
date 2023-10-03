@@ -25,6 +25,12 @@
             color: white;
         }
 
+    .a {
+        color: green; /* Set the text color to green */
+        margin-right: 10px; /* Add some spacing between the links */
+        text-decoration: none; /* Remove underline */
+    }
+
 
 </style>
 
@@ -56,8 +62,8 @@
 			<td>
 				@if (User.IsInRole("Admin"))
 				{
-					<a href="~/FumTreatments/Create/@item.Id">Add Treatment</a>
-					<a href="~/FumTreatments/Index/@item.Id"> View Treatment </a>
+					<a href="~/FumTreatments/Create/@item.Id" class="a">Add Treatment</a>
+					<a href="~/FumTreatments/Index/@item.Id" class="a"> View Treatment </a>
 				}
 				else
 				{
