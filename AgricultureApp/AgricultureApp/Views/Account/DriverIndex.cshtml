@@ -58,13 +58,34 @@
 		display: flex;
 		justify-content: space-evenly;
 	}
+
+    .button1 {
+        padding: 0.5em;
+        padding-left: 1.1em;
+        padding-right: 1.1em;
+        border-radius: 5px;
+        margin-right: 0.5em;
+        border: none;
+        outline: none;
+        transition: .4s ease-in-out;
+        background-color: #013220;
+        color: white;
+    }
+
+        .button1:hover {
+            background-color: #006400;
+            color: white;
+        }
+
 </style>
 
 
 
 <div class="place">
 	<h2 class="font-weight-bold" style="text-align:center;">Available AgricultureApp Drivers</h2><br /><hr />
-	<a class="btn btn-info" href="~/Account/Driver">NEW DRIVER</a><br /><br />
+		<div class="btn">
+			<a href="~/Account/Driver" class="button1">ADD A NEW DRIVER</a>
+		</div>
 	<div class="col-lg-12">
 		@if (Model.Count() == 0)
 		{
